@@ -1,1 +1,1 @@
-# nvim
+# my working nvim configs
