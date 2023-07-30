@@ -133,7 +133,7 @@
     "Lua.semantic.annotation": true,
     "sumneko-lua.enableNvimLuaDev": true,
     "semanticTokens.enable": true,
-    "semanticTokens.highlightPriority": 5,
+    "semanticTokens.highlightPriority": 50,
     "semanticTokens.incrementTypes": ["parameter"],
     "languageserver": {
         "lsp-ahk2": {

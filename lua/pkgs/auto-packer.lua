@@ -37,7 +37,7 @@ function A:startup(_gitres)
                 do use(_pkg) end
             if not A.alreadybootstrapped then
                 require'packer'.sync()
-                require'packer'.update() end
+                require'packer'.sync() end
         end)
         A.bootstrapped = true
     end
