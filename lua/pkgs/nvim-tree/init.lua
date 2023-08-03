@@ -3,7 +3,7 @@ require'nvim-tree'.setup {
     git = {
         timeout = 666
     },
-    view = { width = 30 },
+    view = { width = 24 },
     renderer = { group_empty = true },
     filters = { dotfiles = false },
     modified = { enable = true },

@@ -82,11 +82,26 @@ function K:bindall()
     end
 end
 
+K.nativeblacklist = {
+    [=[^[cC]oc]=],
+    [=[^[tT]elescope]=],
+}
+
+---@param _keyname string
+---@return boolean
+function K.nativeblacklist:matches(_keyname)
+    for _, _blmatch in ipairs(self)
+        do if _keyname:match(_blmatch) then return true end end
+    return false
+end
+
 function K:bindnative()
     for _key, _val in pairs(self) do ---@cast _key string
-        if (_key:match[[keys$]]) and (not _key:match[=[^[cC]oc]=]) and
-            type(_val) == [[table]] and tb.contains(tb.keys(_val), 'bind')
-        then _val:bind() end
+        if not _key:match[[keys$]]                  then return end
+        if not type(_val) == [[table]]              then return end
+        if self.nativeblacklist:matches(_key)       then return end
+        if not tb.contains(tb.keys(_val), [[bind]]) then return end
+        _val:bind()
     end
 end
 
@@ -109,6 +124,7 @@ K.comment.langs = {
 
 K.comment.line = {}
 
+---@diagnostic disable-next-line
 local function _comment_line(self)
     if (not vim.bo.modifiable) then return end
     local ft = vim.bo.filetype
@@ -118,6 +134,7 @@ local function _comment_line(self)
 end
 setmetatable(K.comment.line, { __call = _comment_line })
 
+---@diagnostic disable-next-line
 function K.comment.line:undo()
     ---
 end
@@ -126,11 +143,13 @@ end
 
 K.comment.range = {}
 
+---@diagnostic disable-next-line
 local function _comment_range(self)
     --- ...
 end
 setmetatable(K.comment.range, { __call = _comment_range })
 
+---@diagnostic disable-next-line
 function K.comment.range:undo()
     ---
 end
@@ -319,7 +338,8 @@ setmetatable(K.lua.insert_header, { __call = _lua_insert_header_ })
 ----- autohotkey {{{2
 
 K.ahk2 = {}
-K.ahk2.exe_path = [["C:\Program Files\AutoHotkey\v2\AutoHotkey.exe" ]]
+K.ahk2.exe_path = [["C:\Program Files\AutoHotkey\v2\AutoHotkey.exe"]]
+K.ahk2.cmd_pre = K.ahk2.exe_path .. [[ /ErrorStdOut ]]
 K.ahk2.exe_use_start = true
 K.ahk2.warntype = 'OutputDebug'
 
@@ -342,16 +362,11 @@ end
 function K.ahk2.run_current()
     local bufname = vapi.nvim_buf_get_name(0)
     local fpath = vim.fn.expand[[%:p]]
-    local is_ahk = bufname:match[[%.ahk$]]
-    local ahkexe = K.ahk2.exe_path
-    if K.ahk2.exe_use_start then
-        ahkexe = [[cmd /c 'start ]] .. ahkexe
-    else ahkexe = [[cmd /c ']] .. ahkexe .. [[/ErrorStdOut ]] end
-    if not is_ahk then
+    if not bufname:match[[%.ahk$]] then
         vim.notify[[K.ahk2.run_current():::invalid_filetype]]
         return
     end
-    vim.cmd([[!]]..ahkexe..[["]]..fpath..[["']])
+    vim.cmd([[!. ]]..fpath)
 end
 
 ----- autohotkey }}}2
@@ -555,9 +570,11 @@ K.leader_keys = {
     tf      = [[<CMD>s;true;false<CR><CMD>nohl<CR>]],
     ft      = [[<CMD>s;false;true<CR><CMD>nohl<CR>]],
     ['re<space>'] = [[<CMD>registers<CR>]],
-    ['<0>/']  = [[<C-[>:s;\v]],
-    ['<1>/'] = { [[:s;\v]], mode = { 'x' } }
----|    ahkhead = K.ahk2.insert_header,
+    ['<0>/']      = [[<C-[>:s/\v]],
+    ['<2>/']      = { [[<C-[>:%s/\v]], leader = [[<leader><leader>]] },
+    ['<1>/']      = { [[:s/\v]],  mode = { 'x' } },
+    ['<3>/']      = { [[:%s/\v]], mode = { 'x' }, leader = [[<leader><leader>]] },
+    ---|    ahkhead = K.ahk2.insert_header,
 ---|    ahkrun  = K.ahk2.run_current,
 }
 
@@ -567,6 +584,8 @@ K.ahk2_leader_keys = {
     leader = [[<leader>ah]],
     ed     = K.ahk2.insert_header,
     r      = K.ahk2.run_current,
+    cm     = { [[<CMD>s/^/; /<CR><CMD>nohl<CR>]], mode = { 'n', 'x' } },
+    uc     = { [==[<CMD>s/\v(^\s+)@<=(;+\s*)+//<CR><CMD>nohl<CR>]==], mode = { 'n', 'x' } }
 }
 
 ---@class jk.keys.map.lua_leader: jk.keys.map
@@ -617,6 +636,7 @@ K.coc_leader_keys = {
     bind           =   K.binder,
     leader         =   [[<leader>c]],
     diag           =   [[<CMD>CocDiagnostics<CR>]],
+    ol             =   [[<CMD>CocOutline<CR>]],
     doc            =   K.coc.showhover,
     ['<C-M-a>']    = { K.coc.showhover, leader = [[]] },
     ['rn<leader>'] = { [[<CMD>CocCommand document.renameCurrentWord<CR>]], leader=[[<leader>]], opts={remap=true} },
@@ -624,7 +644,9 @@ K.coc_leader_keys = {
     out            =   [[<CMD>CocCommand workspace.showOutput<CR>]],
     spa            =   [[<CMD>CocCommand cSpell.addWordToWorkspaceDictionary<CR>]],
     ['s<leader>']  = { [[<CMD>CocCommand cSpell.addWordToWorkspaceDictionary<CR>]], leader = [[<leader>]] },
-    ['si<leader>'] = { [[<CMD>CocCommand cSpell.addIgnoreWord<CR>]], leader = [[<leader>]] }
+    ['si<leader>'] = { [[<CMD>CocCommand cSpell.addIgnoreWord<CR>]], leader = [[<leader>]] },
+    ['fgl<leader>'] =  [[<CMD>CocLocalConfig<CR>]],
+    ['fg<leader>'] =   [[<CMD>CocConfig<CR>]],
 }
 
 ---@class jk.keys.map.coc_select: jk.keys.map
@@ -636,6 +658,13 @@ K.coc_select_keys = {
     ic       =   [[<Plug>(coc-classobj-i)]]     ,
     ac       =   [[<Plug>(coc-classobj-a)]]     ,
     fs       = { [[<Plug>(coc-format-selected)]], leader = [[<leader>]] }
+}
+
+---@class jk.keys.map.telescope: jk.keys.map
+K.telescope_keys = {
+    bind = K.binder,
+    leader = [[<leader>t]],
+    he = [[<CMD>Telescope help_tags<CR>]],
 }
 
 

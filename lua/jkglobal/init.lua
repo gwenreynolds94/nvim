@@ -33,7 +33,7 @@ _G.tb = {
     deep_extend = vim.tbl_deep_extend,
     list_contains = vim.list_contains,
     add_reverse_lookup = vim.tbl_add_reverse_lookup,
-    index = vim.fn.index
+    index = vim.fn.index,
 }
 
 _G.vapi = vim.api

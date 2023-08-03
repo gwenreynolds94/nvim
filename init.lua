@@ -90,7 +90,6 @@ if jk.isbs
 opt.grepprg = [[rg --vimgrep --no-heading --smart-case --pcre2 --context=1]]
 opt.grepformat = [[%f:%l:%c:%m,%f:%l:%m]]
 
---[====[
 vcmd([===[
 let &shell = 'pwsh'
 let &shellcmdflag = '-NoLogo -ExecutionPolicy RemoteSigned -Command ]===]..
@@ -101,7 +100,6 @@ let &shellredir = '2>&1 | %%{ "$_" } | Out-File %s; exit $LastExitCode'
 let &shellpipe  = '2>&1 | %%{ "$_" } | tee %s; exit $LastExitCode'
 set shellquote= shellxquote=
 ]===])
---]====]
 
 --[======[
 opt.shell = [[pwsh]]
