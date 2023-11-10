@@ -9,6 +9,8 @@ T.custom_captures = {
     ['variable.builtin.vim.lua'] = "Identifier"
 }
 T.configs_lib = require'nvim-treesitter.configs'
+T.configs_lib.setup{}
+--[==[
 function T:setup()
     self.configs_lib.setup{
         highlight = {
@@ -19,6 +21,7 @@ function T:setup()
     }
     self:hlset()
 end
+--]==]
 
 function T:minimal()
     self.configs_lib.setup{highlight={enable=true}} end

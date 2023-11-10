@@ -35,17 +35,17 @@ then jk.keys:bindall()
 else jk.keys:bindnative() end
 
 opt.clipboard:append[[unnamedplus]]
-g.clipboard = {
-    name = 'pwsh_cliboard',
-    copy = {
-        ['+'] = { 'win32yank.exe', '-i' },
-        ['*'] = { 'win32yank.exe', '-i' },
-    },
-    paste = {
-        ['+'] = 'win32yank.exe -o',
-        ['*'] = 'win32yank.exe -o',
-    }
-}
+--- g.clipboard = {
+---     name = 'pwsh_cliboard',
+---     copy = {
+---         ['+'] = { 'win32yank.exe', '-i' },
+---         ['*'] = { 'win32yank.exe', '-i' },
+---     },
+---     paste = {
+---         ['+'] = 'win32yank.exe -o',
+---         ['*'] = 'win32yank.exe -o',
+---     }
+--- }
 
 opt.number = true
 opt.relativenumber = true
@@ -73,8 +73,10 @@ opt.shiftround = true
 
 opt.termguicolors = true
 
-opt.foldmethod = [[marker]]
-opt.foldlevelstart = 1
+opt.foldenable = true
+opt.foldmethod = [[syntax]]
+opt.foldlevelstart = -1
+opt.foldmarker = [[(<>),(<>)]]
 opt.mouse:append[[c]] --- 'mouse' string (default "nvi")
 opt.selectmode:append[[mouse]]
 opt.colorcolumn = [[99]]
@@ -90,6 +92,9 @@ if jk.isbs
 opt.grepprg = [[rg --vimgrep --no-heading --smart-case --pcre2 --context=1]]
 opt.grepformat = [[%f:%l:%c:%m,%f:%l:%m]]
 
+opt.maxmempattern = 153600
+
+----[====[
 vcmd([===[
 let &shell = 'pwsh'
 let &shellcmdflag = '-NoLogo -ExecutionPolicy RemoteSigned -Command ]===]..
@@ -100,6 +105,7 @@ let &shellredir = '2>&1 | %%{ "$_" } | Out-File %s; exit $LastExitCode'
 let &shellpipe  = '2>&1 | %%{ "$_" } | tee %s; exit $LastExitCode'
 set shellquote= shellxquote=
 ]===])
+----]====]
 
 --[======[
 opt.shell = [[pwsh]]
@@ -118,6 +124,10 @@ opt.shellxquote = [[]]
 
 vim.cmd[[filetype plugin indent on]]
 
+if vim.g.neovide then
+    vim.o.guifont = "FiraCode NFM:h10"
+end
+
 if jk.isbs then
     jk.conf.treesitter = require'pkgs.nvim-treesitter'
     jk.conf.nightfox = require'pkgs.nightfox'
@@ -126,18 +136,20 @@ if jk.isbs then
     jk.conf.notify = require'pkgs.nvim-notify'
     jk.conf.nvimtree = require'pkgs.nvim-tree'
     jk.conf.lualine = require'pkgs.lualine'
-    jk.conf.autopairs = require'pkgs.autopairs'
+    --- jk.conf.autopairs = require'pkgs.autopairs'
     jk.conf.indentblankline = require'pkgs.indent-blankline'
+    jk.conf.twilight = require'pkgs.twilight'
 end
 
-vim.cmd[[colorscheme duskfox]]
+vim.cmd[[colorscheme terafox]]
 
 vim.fn.setreg('c', [[^i--- kd]])
 vim.fn.setreg('u', [[^ikDkDkDkDkd]])
 vim.fn.setreg('x', [[]])
 
+--[===[
 vapi.nvim_create_autocmd({'BufNewFile', 'BufRead'}, {
     pattern = '*.start*layout',
     command = 'setlocal ft=xml',
 })
-
+--]===]

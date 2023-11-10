@@ -95,7 +95,7 @@ require'nightfox'.setup{
       search = true,
     },
     modules = {                        -- List of various plugins and additional options
-      -- ...
+        coc = { enable = true }
     },
   },
   palettes = {},

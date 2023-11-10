@@ -27,15 +27,19 @@ P.isbootstrapped = P.autopacker:init{
     {
         [[neoclide/coc.nvim]], branch = [[release]],
     },
-    { [[windwp/nvim-autopairs]] },
+    --- { [[windwp/nvim-autopairs]] },
     { [[mfussenegger/nvim-dap]] },
     { [[lukas-reineke/indent-blankline.nvim]] },
     { [[nvim-treesitter/nvim-treesitter]] },
+    --- { [[simrat39/symbols-outline.nvim]] },
     { [[norcalli/nvim-colorizer.lua]] },
     { [[EdenEast/nightfox.nvim]] },
     { [[rcarriga/nvim-notify]] },
-    { [[Shougo/echodoc.vim]] },
+    --- { [[liuchengxu/vista.vim]] },
+    --- { [[Shougo/echodoc.vim]] },
     { [[RRethy/nvim-align]] },
+    { [[fannheyward/telescope-coc.nvim]] },
+    { [[folke/twilight.nvim]] },
     --- { [[neovim/nvim-lspconfig]] },
  }
 

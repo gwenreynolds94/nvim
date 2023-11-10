@@ -79,11 +79,6 @@ _G.packer_plugins = {
     path = "C:\\Users\\jonat\\.local\\share\\nvim-data\\site\\pack\\packer\\start\\coc.nvim",
     url = "https://github.com/neoclide/coc.nvim"
   },
-  ["echodoc.vim"] = {
-    loaded = true,
-    path = "C:\\Users\\jonat\\.local\\share\\nvim-data\\site\\pack\\packer\\start\\echodoc.vim",
-    url = "https://github.com/Shougo/echodoc.vim"
-  },
   ["indent-blankline.nvim"] = {
     loaded = true,
     path = "C:\\Users\\jonat\\.local\\share\\nvim-data\\site\\pack\\packer\\start\\indent-blankline.nvim",
@@ -108,11 +103,6 @@ _G.packer_plugins = {
     loaded = true,
     path = "C:\\Users\\jonat\\.local\\share\\nvim-data\\site\\pack\\packer\\start\\nvim-align",
     url = "https://github.com/RRethy/nvim-align"
-  },
-  ["nvim-autopairs"] = {
-    loaded = true,
-    path = "C:\\Users\\jonat\\.local\\share\\nvim-data\\site\\pack\\packer\\start\\nvim-autopairs",
-    url = "https://github.com/windwp/nvim-autopairs"
   },
   ["nvim-colorizer.lua"] = {
     loaded = true,
@@ -156,6 +146,11 @@ _G.packer_plugins = {
     path = "C:\\Users\\jonat\\.local\\share\\nvim-data\\site\\pack\\packer\\start\\plenary.nvim",
     url = "https://github.com/nvim-lua/plenary.nvim"
   },
+  ["telescope-coc.nvim"] = {
+    loaded = true,
+    path = "C:\\Users\\jonat\\.local\\share\\nvim-data\\site\\pack\\packer\\start\\telescope-coc.nvim",
+    url = "https://github.com/fannheyward/telescope-coc.nvim"
+  },
   ["telescope-fzf-native.nvim"] = {
     loaded = true,
     path = "C:\\Users\\jonat\\.local\\share\\nvim-data\\site\\pack\\packer\\start\\telescope-fzf-native.nvim",
@@ -165,6 +160,11 @@ _G.packer_plugins = {
     loaded = true,
     path = "C:\\Users\\jonat\\.local\\share\\nvim-data\\site\\pack\\packer\\start\\telescope.nvim",
     url = "https://github.com/nvim-telescope/telescope.nvim"
+  },
+  ["twilight.nvim"] = {
+    loaded = true,
+    path = "C:\\Users\\jonat\\.local\\share\\nvim-data\\site\\pack\\packer\\start\\twilight.nvim",
+    url = "https://github.com/folke/twilight.nvim"
   }
 }
 

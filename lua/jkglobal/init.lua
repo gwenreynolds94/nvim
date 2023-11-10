@@ -4,7 +4,15 @@ _G.jk = {
     dbg = {},
     dynamic_opts = {},
     ftplugin = {},
-    conf = {},
+    conf = {
+        ahk = {
+            header = {
+                req = true,
+                warn = false,
+                single = false,
+            },
+        },
+    },
 }
 
 _G.tb = {

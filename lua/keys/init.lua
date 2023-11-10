@@ -348,15 +348,25 @@ function K.ahk2.insert_header(_warntype)
     _warntype = type(_warntype) == 'string' and _warntype or K.ahk2.warntype
     local fpath = vim.fn.expand[[%:p]]
     local fname = fpath:match[=[[/\]([^/\]+)$]=]
+    local fdisp, inlib = '', false
+    for _fdir in fpath:gmatch[=[([^/\]+)[/\]]=] do
+        if inlib then fdisp = _fdir .. '.' .. fdisp end
+        if _fdir:match[[Lib]] then
+            inlib = true
+        end
+    end
+    fdisp = fdisp .. fname
     local is_ahk = fname:match[[%.ahk$]]
     if not is_ahk then return end
-    local header_lines = { [[; ]]..fname,
-                           [[]],
-                           [[#Requires AutoHotkey v2.0]],
-                           [[#Warn All, StdOut]]        ,
-                           [[#SingleInstance Force]]    ,
-                           [[]] }
+    local header_lines = { [[; ]]..fdisp, [[]] }
+    if jk.conf.ahk.header.req then tb.insert(header_lines, [[#Requires AutoHotkey v2+]]) end
+    if jk.conf.ahk.header.warn then tb.insert(header_lines, [[#Warn All, StdOut]]) end
+    if jk.conf.ahk.header.single then tb.insert(header_lines, [[#SingleInstance Force]]) end
+    tb.insert(header_lines, [[]])
+    tb.insert(header_lines, [[]])
     vapi.nvim_buf_set_lines(0, 0, 0, false, header_lines)
+    vapi.nvim_win_set_cursor(0, { #header_lines, vfn.col{} })
+
 end
 
 function K.ahk2.run_current()
@@ -503,26 +513,36 @@ end
 
 ---@class jk.keys.map.misc: jk.keys.map
 K.misc_keys = {
-    bind           = K.binder,
-    [',,']         = [[@@]],
-    ['<C-h>']      = [[<CMD>NvimTreeToggle<CR>]],
-    ['<M-BS>']     = { [[<C-w>]], mode = { 'i', 'c' } },
-    ['<M-Left>']   = { [[<C-\><C-n>]], mode = { 't' } },
-    ['<M-/>']      = { [[<C-w><C-w>]], mode = { 'n', 'x' } },
-    ['<M-?>']      = { [[<C-w><S-w>]], mode = { 'n', 'x' } },
-    ['<M-S-t>']    = K.test_meth,
-    ['<M-J>']      = [[<C-w>4-]],
-    ['<C-M-j>']    = [[<C-w>16-]],
-    ['<M-K>']      = [[<C-w>4+]],
-    ['<C-M-k>']    = [[<C-w>16+]],
-    ['<M-H>']      = [[<C-w>4<]],
-    ['<C-M-h>']    = [[<C-w>16<]],
-    ['<M-L>']      = [[<C-w>4>]],
-    ['<C-M-l>']    = [[<C-w>16>]],
-    ['<M-S-Down>'] = { [[<CMD>move+1<CR>]] , mode = { 'n', 'i', 'x', 'o' } } ,
-    ['<M-S-Up>']   = { [[<CMD>move--1<CR>]], mode = { 'n', 'i', 'x', 'o' } } ,
-    ['<C-M-Down>'] = { [[<CMD>copy+1<CR>]] , mode = { 'n', 'i', 'x', 'o' } } ,
-    ['<C-M-Up>']   = { [[<CMD>copy-1<CR>]] , mode = { 'n', 'i', 'x', 'o' } } ,
+    bind            = K.binder,
+    [',,']          = [[@@]],
+    ['<C-h>']       = [[<CMD>NvimTreeToggle<CR>]],
+    ['<M-BS>']      = { [[<C-w>]], mode = { 'i', 'c' } },
+    ['<M-Left>']    = { [[<C-\><C-n>]], mode = { 't' } },
+    ['<M-/>']       = { [[<C-w><C-w>]], mode = { 'n', 'x' } },
+    ['<M-?>']       = { [[<C-w><S-w>]], mode = { 'n', 'x' } },
+    ['<M-S-t>']     = K.test_meth,
+    ['<M-J>']       = [[<C-w>4-]],
+    ['<C-M-j>']     = [[<C-w>16-]],
+    ['<M-K>']       = [[<C-w>4+]],
+    ['<C-M-k>']     = [[<C-w>16+]],
+    ['<M-H>']       = [[<C-w>4<]],
+    ['<C-M-h>']     = [[<C-w>16<]],
+    ['<M-L>']       = [[<C-w>4>]],
+    ['<C-M-l>']     = [[<C-w>16>]],
+    ['<M-b>']       = [[<CMD>bn<CR>]],
+    ['<M-S-b>']     = [[<CMD>bp<CR>]],
+    ['<M-S-Down>']  = { [[<CMD>move+1<CR>]] , mode = { 'n', 'i', 'x', 'o' } } ,
+    ['<M-S-Up>']    = { [[<CMD>move--1<CR>]], mode = { 'n', 'i', 'x', 'o' } } ,
+    ['<C-M-Down>']  = { [[<CMD>copy+1<CR>]] , mode = { 'n', 'i', 'x', 'o' } } ,
+    ['<C-M-Up>']    = { [[<CMD>copy-1<CR>]] , mode = { 'n', 'i', 'x', 'o' } } ,
+    ['<0><M-S-Left>']  = { [[<C-[><<i<Left><Left><Left>]], mode = { 'i' } } ,
+    ['<0><M-S-Right>'] = { [[<C-[>>>i<Right><Right><Right><Right><Right>]], mode = { 'i' } } ,
+    ['<1><M-S-Left>']  = { [[<<<Left><Left><Left><Left>]], mode = { 'n', 'x' } } ,
+    ['<1><M-S-Right>'] = { [[>><Right><Right><Right><Right>]], mode = { 'n', 'x' } } ,
+    ['<0><C-M-Left>']  = { [[<C-[><<i<Right>]], mode = { 'i' } } ,
+    ['<0><C-M-Right>'] = { [[<C-[>>>i<Right>]], mode = { 'i' } } ,
+    ['<1><C-M-Left>']  = { [[<<]], mode = { 'n', 'x' } } ,
+    ['<1><C-M-Right>'] = { [[>>]], mode = { 'n', 'x' } } ,
     --- ['<C-x>']    = [[<Right>x<Left>]] ,
 }
 
@@ -569,11 +589,11 @@ K.leader_keys = {
     regx    = [[<CMD>call setreg('+', getreg('x'))<CR>]],
     tf      = [[<CMD>s;true;false<CR><CMD>nohl<CR>]],
     ft      = [[<CMD>s;false;true<CR><CMD>nohl<CR>]],
-    ['re<space>'] = [[<CMD>registers<CR>]],
-    ['<0>/']      = [[<C-[>:s/\v]],
-    ['<2>/']      = { [[<C-[>:%s/\v]], leader = [[<leader><leader>]] },
-    ['<1>/']      = { [[:s/\v]],  mode = { 'x' } },
-    ['<3>/']      = { [[:%s/\v]], mode = { 'x' }, leader = [[<leader><leader>]] },
+    [  're<space>'  ] = [[<CMD>registers<CR>]],
+    ['<0>/<leader>' ] = { [[<C-[>:s/\v]]     },
+    ['<0>//<leader>'] = { [[<C-[>:%s/\v]]    },
+    ['<1>/<leader>' ] = { [[:s/\v]] , mode = { 'x' } },
+    ['<1>//<leader>'] = { [[:%s/\v]], mode = { 'x' } },
     ---|    ahkhead = K.ahk2.insert_header,
 ---|    ahkrun  = K.ahk2.run_current,
 }
@@ -653,11 +673,15 @@ K.coc_leader_keys = {
 K.coc_select_keys = {
     bind = K.binder,
     mode = { 'x', 'o' },
-    ['if']   =   [[<Plug>(coc-funcobj-i)]]      ,
-    af       =   [[<Plug>(coc-funcobj-a)]]      ,
-    ic       =   [[<Plug>(coc-classobj-i)]]     ,
-    ac       =   [[<Plug>(coc-classobj-a)]]     ,
-    fs       = { [[<Plug>(coc-format-selected)]], leader = [[<leader>]] }
+    isf  =   [[<Plug>(coc-funcobj-i)]]       ,
+    asf  =   [[<Plug>(coc-funcobj-a)]]       ,
+    isc  =   [[<Plug>(coc-classobj-i)]]      ,
+    asc  =   [[<Plug>(coc-classobj-a)]]      ,
+    ifs  =   [[<Plug>(coc-format-selected)]] ,
+    iff  =   [[<Plug>(coc-funcobj-a)<Plug>(coc-format-selected)]]   ,
+    aff  =   [[<Plug>(coc-funcobj-a)<Plug>(coc-format-selected)]]   ,
+    ifc  =   [[<Plug>(coc-classobj-a)<Plug>(coc-format-selected)]]  ,
+    afc  =   [[<Plug>(coc-classobj-a)<Plug>(coc-format-selected)]]  ,
 }
 
 ---@class jk.keys.map.telescope: jk.keys.map
@@ -665,6 +689,9 @@ K.telescope_keys = {
     bind = K.binder,
     leader = [[<leader>t]],
     he = [[<CMD>Telescope help_tags<CR>]],
+    cs = [[<CMD>Telescope colorscheme<CR>]],
+    cm = [[<CMD>Telescope commands<CR>]],
+    ch = [[<CMD>Telescope command_history]],
 }
 
 

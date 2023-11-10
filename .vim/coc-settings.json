@@ -1,8 +1,28 @@
 {
-  "Lua.workspace.checkThirdParty": false,
+  "Lua.workspace.checkThirdParty": "Disable",
   "cSpell.words": [
     "already",
     "bstrapped",
     "pwsh"
+  ],
+  "Lua.workspace.library": [
+    "C:/Users/jonat/.config/nvim",
+    "C:/Users/jonat/.local/share/nvim-data/site/pack/packer/start/coc.nvim/lua",
+    "C:/Users/jonat/.local/share/nvim-data/site/pack/packer/start/indent-blankline.nvim",
+    "C:/Users/jonat/.local/share/nvim-data/site/pack/packer/start/lualine.nvim/lua",
+    "C:/Users/jonat/.local/share/nvim-data/site/pack/packer/start/neovim-session-manager/lua",
+    "C:/Users/jonat/.local/share/nvim-data/site/pack/packer/start/nightfox.nvim/lua",
+    "C:/Users/jonat/.local/share/nvim-data/site/pack/packer/start/nvim-align/lua",
+    "C:/Users/jonat/.local/share/nvim-data/site/pack/packer/start/nvim-autopairs/lua",
+    "C:/Users/jonat/.local/share/nvim-data/site/pack/packer/start/nvim-colorizer.lua",
+    "C:/Users/jonat/.local/share/nvim-data/site/pack/packer/start/nvim-dap/lua",
+    "C:/Users/jonat/.local/share/nvim-data/site/pack/packer/start/nvim-notify/lua",
+    "C:/Users/jonat/.local/share/nvim-data/site/pack/packer/start/nvim-tree.lua/lua",
+    "C:/Users/jonat/.local/share/nvim-data/site/pack/packer/start/nvim-treesitter/lua",
+    "C:/Users/jonat/.local/share/nvim-data/site/pack/packer/start/packer.nvim/lua",
+    "C:/Users/jonat/.local/share/nvim-data/site/pack/packer/start/plenary.nvim/lua",
+    "C:/Users/jonat/.local/share/nvim-data/site/pack/packer/start/telescope-fzf-native.nvim/lua",
+    "C:/Users/jonat/.local/share/nvim-data/site/pack/packer/start/telescope.nvim/lua",
+    "${3rd}/luv/library"
   ]
 }
